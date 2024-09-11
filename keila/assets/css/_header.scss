@@ -1,0 +1,27 @@
+
+#main-menu {
+    #main-menu-toggle:checked {
+        &~* #show-main-menu {
+            display: none;
+        }
+        &~ nav {
+            @apply flex;
+        }
+    }
+
+    #main-menu-toggle:not(:checked) ~ * #hide-main-menu {
+        display: none;
+    }
+}
+
+.menu-link {
+    @apply flex gap-2 items-center text-white hover:bg-emerald-800 hover:text-white px-3 py-2 rounded-md text-sm font-medium;
+
+    &.menu-link--active {
+        @apply bg-emerald-800 text-white;
+    }
+
+    &.sml-4.menu-link--active {
+        @apply bg-emerald-900 text-white;
+    }
+}
