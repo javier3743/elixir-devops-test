@@ -5,24 +5,6 @@ module "eks" {
   cluster_name    = var.cluster_name
   cluster_version = var.cluster_version
 
-  cluster_addons = {
-    coredns = {
-      most_recent = true
-
-      timeouts = {
-        create = "2m"
-      }
-    }
-    kube-proxy = {
-      most_recent = true
-    }
-    vpc-cni = {
-      most_recent = true
-    }
-    aws-ebs-csi-driver = {
-      most_recent = true
-    }
-  }
   vpc_id     = var.vpc_id
   subnet_ids = var.subnet_ids
 
