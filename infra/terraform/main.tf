@@ -13,6 +13,7 @@ module "vpc" {
   source = "./modules/vpc"
 
   region               = var.region
+  cluster_name         = var.cluster_name
   vpc_cidr             = var.vpc_cidr
   availability_zones   = var.availability_zones
   public_subnet_cidrs  = var.public_subnet_cidrs
@@ -28,12 +29,4 @@ module "eks" {
   subnet_ids         = module.vpc.private_subnet_ids
   cluster_role_arn   = module.iam.cluster_role_arn
   nodes_role_arn     = module.iam.nodes_role_arn
-}
-
-module "k8s_resources" {
-  source = "./modules/k8s-resources"
-
-  eks_cluster_endpoint       = module.eks.cluster_endpoint
-  eks_cluster_ca_certificate = module.eks.cluster_certificate_authority_data
-  eks_cluster_name           = module.eks.cluster_name
 }
