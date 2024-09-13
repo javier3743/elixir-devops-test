@@ -31,6 +31,7 @@ module "rds" {
   db_instance_class = var.db_instance_class
   db_subnet_group_name = module.vpc.database_subnet_group_name
   vpc_security_group_ids  = [module.vpc.rds_security_group_id]
+  depends_on = [ module.iam, module.vpc ]
 }
 
 module "eks" {

@@ -5,9 +5,9 @@ module "db" {
   identifier = "keila"
 
   engine               = "postgres"
-  engine_version       = "13.7"
-  family               = "postgres13"
-  major_engine_version = "13"
+  engine_version       = "15"
+  family               = "postgres15"
+  major_engine_version = "15"
   instance_class       = var.db_instance_class
 
   allocated_storage     = 20
