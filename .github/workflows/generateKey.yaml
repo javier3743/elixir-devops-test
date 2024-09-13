@@ -1,0 +1,25 @@
+name: 'Generate secret key'
+
+on:
+  workflow_dispatch:
+
+jobs:
+  generate_key:
+    name: 'Generate secret key'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./keila
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Elixir
+      uses: erlef/setup-beam@v1
+      with:
+        elixir-version: '1.15.0'
+        otp-version: '25.0'
+    
+    - name: Generate SECRET_KEY_BASE
+      id: generate_secret_key
+      run: echo SECRET_KEY_BASE=$(mix phx.gen.secret)
