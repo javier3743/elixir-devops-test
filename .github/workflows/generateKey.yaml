@@ -20,6 +20,9 @@ jobs:
         elixir-version: '1.15.0'
         otp-version: '25.0'
     
+    - name: Install dependencies
+      run: mix do deps.get, deps.compile
+    
     - name: Generate SECRET_KEY_BASE
       id: generate_secret_key
       run: echo SECRET_KEY_BASE=$(mix phx.gen.secret)
