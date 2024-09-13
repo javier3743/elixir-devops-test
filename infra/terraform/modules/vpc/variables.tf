@@ -4,7 +4,7 @@ variable "region" {
 }
 variable "cluster_name" {
     type = string
-    description = "EKS cluster name"
+    description = "Cluster name"
 }
 variable "vpc_cidr" {
     type = string
@@ -21,4 +21,8 @@ variable "public_subnet_cidrs" {
 variable "private_subnet_cidrs" {
     type = list(string)
     description = "Private subnet cidrs"
+}
+variable "database_subnet_cidrs" {
+    type = list(string)
+    description = "Database subnet cidrs"
 }

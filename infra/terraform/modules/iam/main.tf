@@ -1,55 +1,29 @@
-resource "aws_iam_role" "eks_cluster_role" {
-  name = "eks-cluster-role"
+module "eks_cluster_role" {
+  source  = "terraform-aws-modules/iam/aws//modules/iam-assumable-role"
+  version = "~> 5.3"
 
-  assume_role_policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Action = "sts:AssumeRole"
-        Effect = "Allow"
-        Principal = {
-          Service = "eks.amazonaws.com"
-        }
-      }
-    ]
-  })
+  create_role = true
+  role_name   = "eks-cluster-role"
+  role_requires_mfa = false
 
-  tags = {
-    Name     = "cluster-role"
-  }
+  trusted_role_services = [
+    "eks.amazonaws.com"
+  ]
+
+  custom_role_policy_arns = var.cluster_roles_policies
 }
 
-resource "aws_iam_role_policy_attachment" "eks_cluster_policy" {
-  for_each = toset(var.cluster_roles_policies)
+module "eks_node_role" {
+  source  = "terraform-aws-modules/iam/aws//modules/iam-assumable-role"
+  version = "~> 5.3"
 
-  policy_arn = each.value
-  role       = aws_iam_role.eks_cluster_role.name
+  create_role = true
+  role_name   = "eks-node-role"
+  role_requires_mfa = false
+
+  trusted_role_services = [
+    "ec2.amazonaws.com"
+  ]
+
+  custom_role_policy_arns = var.nodes_roles_policies
 }
-
-resource "aws_iam_role" "eks_node_role" {
-  name = "eks-node-role"
-
-  assume_role_policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Action = "sts:AssumeRole"
-        Effect = "Allow"
-        Principal = {
-          Service = "ec2.amazonaws.com"
-        }
-      }
-    ]
-  })
-  tags = {
-    Name     = "nodes-role"
-  }
-}
-
-resource "aws_iam_role_policy_attachment" "eks_worker_node_policy" {
-  for_each = toset(var.nodes_roles_policies)
-
-  policy_arn = each.value
-  role       = aws_iam_role.eks_node_role.name
-}
-

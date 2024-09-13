@@ -23,6 +23,11 @@ variable "private_subnet_cidrs" {
   type = list(string)
 }
 
+variable "database_subnet_cidrs" {
+  description = "CIDR blocks for the database subnets"
+  type        = list(string)
+}
+
 variable "cluster_name" {
   description = "Cluster name"
   type = string
@@ -41,4 +46,24 @@ variable "cluster_roles_policies" {
 variable "nodes_roles_policies" {
   description = "Nodes roles"
   type = list(string)
+}
+
+variable "db_name" {
+  description = "Database name"
+  type = string
+}
+
+variable "db_username" {
+  description = "Database username"
+  type = string
+}
+
+variable "db_password" {
+  description = "Database password"
+  type = string
+}
+
+variable "db_instance_class" {
+  description = "Database instance class"
+  type = string
 }

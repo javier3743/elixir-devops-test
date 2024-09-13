@@ -1,104 +1,54 @@
-resource "aws_vpc" "main" {
-  cidr_block = var.vpc_cidr
+module "vpc" {
+  source  = "terraform-aws-modules/vpc/aws"
+  version = "5.0.0"
+
+  name = "main-vpc"
+  cidr = var.vpc_cidr
+
+  azs             = var.availability_zones
+  private_subnets = var.private_subnet_cidrs
+  public_subnets  = var.public_subnet_cidrs
+  database_subnets = var.database_subnet_cidrs
+
+  enable_nat_gateway     = true
+  enable_vpn_gateway     = true
+  one_nat_gateway_per_az = true
 
   enable_dns_hostnames = true
   enable_dns_support   = true
 
+  create_database_subnet_group = true
+
   tags = {
     Name = "main-vpc"
   }
-}
-
-resource "aws_internet_gateway" "main" {
-  vpc_id = aws_vpc.main.id
-
-  tags = {
-    Name = "main-igw"
-  }
-}
-
-resource "aws_subnet" "public" {
-  for_each = { for i, cidr in var.public_subnet_cidrs : cidr => var.availability_zones[i] }
-
-  vpc_id                  = aws_vpc.main.id
-  cidr_block              = each.key
-  availability_zone       = each.value
-  map_public_ip_on_launch = true
-
-  tags = {
-    Name = "Public Subnet ${index(var.public_subnet_cidrs, each.key) + 1}"
+  public_subnet_tags = {
+    Name                                        = "Public Subnets"
+    "kubernetes.io/role/elb"                    = 1
     "kubernetes.io/cluster/${var.cluster_name}" = "shared"
-    "kubernetes.io/role/elb" = "1"
   }
-}
-
-resource "aws_subnet" "private" {
-  for_each = { for i, cidr in var.private_subnet_cidrs : cidr => var.availability_zones[i] }
-
-  vpc_id            = aws_vpc.main.id
-  cidr_block        = each.key
-  availability_zone = each.value
-
-  tags = {
-    Name = "Private Subnet ${index(var.private_subnet_cidrs, each.key) + 1}"
+  private_subnet_tags = {
+    Name                                        = "private-subnets"
+    "kubernetes.io/role/internal-elb"           = 1
     "kubernetes.io/cluster/${var.cluster_name}" = "shared"
-    "kubernetes.io/role/internal-elb"           = "1"
   }
 }
 
-resource "aws_nat_gateway" "main" {
-  allocation_id = aws_eip.nat.id
-  subnet_id     = values(aws_subnet.public)[0].id
+module "rds_security_group" {
+  source  = "terraform-aws-modules/security-group/aws"
+  version = "~> 5.2.0"
 
-  depends_on = [aws_internet_gateway.main]
+  name        = "keila-rds"
+  description = "Allow database traffic"
+  vpc_id      = module.vpc.vpc_id
 
-  tags = {
-    Name = "main-nat-gw"
-  }
-}
-
-resource "aws_eip" "nat" {
-  domain = "vpc"
-  
-  depends_on = [aws_internet_gateway.main]
-}
-
-resource "aws_route_table" "public" {
-  vpc_id = aws_vpc.main.id
-
-  route {
-    cidr_block = "0.0.0.0/0"
-    gateway_id = aws_internet_gateway.main.id
-  }
-
-  tags = {
-    Name = "Public Route Table"
-  }
-}
-
-resource "aws_route_table" "private" {
-  vpc_id = aws_vpc.main.id
-
-  route {
-    cidr_block     = "0.0.0.0/0"
-    nat_gateway_id = aws_nat_gateway.main.id
-  }
-
-  tags = {
-    Name = "Private Route Table"
-  }
-}
-
-resource "aws_route_table_association" "public" {
-  for_each = aws_subnet.public
-
-  subnet_id      = each.value.id
-  route_table_id = aws_route_table.public.id
-}
-
-resource "aws_route_table_association" "private" {
-  for_each = aws_subnet.private
-
-  subnet_id      = each.value.id
-  route_table_id = aws_route_table.private.id
+  ingress_with_cidr_blocks = [
+    {
+      from_port   = 5432
+      to_port     = 5432
+      protocol    = "tcp"
+      description = "PostgreSQL access from within VPC"
+      cidr_blocks = module.vpc.vpc_cidr_block
+    },
+  ]
 }
