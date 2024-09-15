@@ -48,8 +48,8 @@ module "eks" {
   depends_on = [ module.iam, module.vpc, module.rds ]
 }
 
-module "lb" {
-  source = "./modules/lb"
+module "alb" {
+  source = "./modules/alb"
 
   cluster_name      = var.cluster_name
   vpc_id            = module.vpc.vpc_id
