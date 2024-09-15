@@ -31,9 +31,10 @@ jobs:
 
     - name: Replace placeholders in backend.tf
       run: |
-        sed -i 's|{{ secrets.TF_VAR_backend_bucket }}|'"$TF_VAR_backend_bucket"'|g' infra/terraform/backend.tf
-        sed -i 's|{{ secrets.TF_VAR_region }}|'"$TF_VAR_region"'|g' infra/terraform/backend.tf
-        sed -i 's|{{ secrets.TF_VAR_backend_key_table }}|'"$TF_VAR_backend_key_table"'|g' infra/terraform/backend.tf
+        sed -i 's|{{ secrets.TF_VAR_backend_bucket }}|'"$TF_VAR_backend_bucket"'|g' backend.tf
+        sed -i 's|{{ secrets.TF_VAR_region }}|'"$TF_VAR_region"'|g' backend.tf
+        sed -i 's|{{ secrets.TF_VAR_backend_key_table }}|'"$TF_VAR_backend_key_table"'|g' backend.tf
+        cat backend.tf
 
     - name: Terraform Init
       run: terraform init
