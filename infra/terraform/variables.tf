@@ -67,3 +67,13 @@ variable "db_instance_class" {
   description = "Database instance class"
   type = string
 }
+
+variable "backend_bucket" {
+  description = "Backend bucket"
+  type = string
+}
+
+variable "backend_key_table" {
+  description = "Backend key table"
+  type = string
+}
