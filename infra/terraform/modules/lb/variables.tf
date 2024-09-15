@@ -1,14 +1,19 @@
 variable "cluster_name" {
-  description = "Name of the EKS cluster"
   type        = string
+  description = "Name of the EKS cluster"
 }
 
 variable "vpc_id" {
-  description = "VPC ID"
   type        = string
+  description = "ID of the VPC"
 }
 
-variable "region" {
-  description = "Region"
+variable "public_subnet_ids" {
+  type        = list(string)
+  description = "List of public subnet IDs"
+}
+
+variable "alb_sg_id" {
   type        = string
+  description = "ID of the ALB security group"
 }

@@ -51,9 +51,10 @@ module "eks" {
 module "lb" {
   source = "./modules/lb"
 
-  cluster_name = var.cluster_name
-  vpc_id       = module.vpc.vpc_id
-  region       = var.region
+  cluster_name      = var.cluster_name
+  vpc_id            = module.vpc.vpc_id
+  public_subnet_ids = module.vpc.public_subnet_ids
+  alb_sg_id         = module.vpc.alb_sg_id
 
   depends_on = [module.eks]
 }

@@ -27,3 +27,8 @@ output "eks_node_sg_id" {
   description = "ID of EKS node security group"
   value       = module.eks_node_sg.security_group_id
 }
+
+output "alb_sg_id" {
+  description = "ID of ALB security group"
+  value       = module.alb_sg.security_group_id
+}
