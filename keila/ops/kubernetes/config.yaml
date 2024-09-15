@@ -1,7 +1,0 @@
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: keila-config
-data:
-  URL_HOST: "your-domain.com"
-  MAILER_SMTP_HOST: "smtp.example.com"
