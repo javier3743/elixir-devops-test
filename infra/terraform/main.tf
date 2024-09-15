@@ -43,6 +43,17 @@ module "eks" {
   subnet_ids         = module.vpc.private_subnet_ids
   cluster_role_arn   = module.iam.cluster_role_arn
   nodes_role_arn     = module.iam.nodes_role_arn
+  eks_node_sg_id     = module.vpc.eks_node_sg_id
 
-  depends_on = [ module.iam, module.vpc ]
+  depends_on = [ module.iam, module.vpc, module.rds ]
+}
+
+module "lb" {
+  source = "./modules/lb"
+
+  cluster_name = var.cluster_name
+  vpc_id       = module.vpc.vpc_id
+  region       = var.region
+
+  depends_on = [module.eks]
 }

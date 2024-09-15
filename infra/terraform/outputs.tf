@@ -10,6 +10,7 @@ output "eks_cluster_name" {
   value = module.eks.cluster_name
 }
 
-output "rds_endpoint" {
-  value = module.rds.endpoint
+output "db_endpoint" {
+  description = "The connection endpoint for the RDS database"
+  value       = module.rds.db_endpoint
 }

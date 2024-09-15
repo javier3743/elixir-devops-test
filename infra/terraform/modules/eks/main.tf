@@ -27,5 +27,18 @@ module "eks" {
       instance_types = ["t3.micro"]
     }
   }
+
+  node_security_group_additional_rules = {
+    ingress_allow_access_from_control_plane = {
+      type                          = "ingress"
+      protocol                      = "tcp"
+      from_port                     = 80
+      to_port                       = 443
+      source_cluster_security_group = true
+      description                   = "Allow access from control plane to webhook port of AWS load balancer controller"
+    }
+  }
+
+  node_security_group_id = var.eks_node_sg_id
   
 }

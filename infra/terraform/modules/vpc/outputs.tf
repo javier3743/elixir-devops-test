@@ -22,3 +22,8 @@ output "rds_security_group_id" {
   description = "ID of RDS security group"
   value       = module.rds_security_group.security_group_id
 }
+
+output "eks_node_sg_id" {
+  description = "ID of EKS node security group"
+  value       = module.eks_node_sg.security_group_id
+}

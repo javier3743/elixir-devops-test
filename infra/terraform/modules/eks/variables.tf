@@ -22,3 +22,7 @@ variable "nodes_role_arn" {
   description = "Nodes role arn"
   type = string
 }
+variable "eks_node_sg_id" {
+  description = "EKS node security group id"
+  type = string
+}
