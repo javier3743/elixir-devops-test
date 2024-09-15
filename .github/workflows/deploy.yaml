@@ -37,3 +37,34 @@ jobs:
 
     - name: Terraform Apply
       run: terraform apply -auto-approve
+
+    - name: Set up kubectl
+      uses: azure/setup-kubectl@v4.0.0
+    
+    - name: Update kubeconfig
+      run: |
+        aws eks get-token --cluster-name ${{ secrets.EKS_CLUSTER_NAME }} --region ${{ secrets.AWS_REGION }} | kubectl apply -f -
+      
+    - name: Create ConfigMap
+      run: |
+        kubectl create configmap keila-config \
+          --from-literal=URL_HOST=${{ secrets.URL_HOST }} \
+          --from-literal=MAILER_SMTP_HOST=${{ secrets.MAILER_SMTP_HOST }} \
+          --from-literal=KEILA_USER=${{ secrets.KEILA_USER }} \
+          --from-literal=KEILA_PASSWORD=${{ secrets.KEILA_PASSWORD }} \
+          --dry-run=client -o yaml | kubectl apply -f -
+
+    - name: Create Secrets
+      run: |
+        kubectl create secret generic keila-secrets \
+          --from-literal=SECRET_KEY_BASE=${{ secrets.SECRET_KEY_BASE }} \
+          --from-literal=DB_URL=${{ secrets.DB_URL }} \
+          --from-literal=MAILER_SMTP_USER=${{ secrets.MAILER_SMTP_USER }} \
+          --from-literal=MAILER_SMTP_PASSWORD=${{ secrets.MAILER_SMTP_PASSWORD }} \
+          --dry-run=client -o yaml | kubectl apply -f -
+    
+    - name: Deploy Kubernetes manifests
+      run: |
+        kubectl apply -f ../keila/ops/kubernetes/deployment.yaml
+        kubectl apply -f ../keila/ops/kubernetes/service.yaml
+        kubectl apply -f ../keila/ops/kubernetes/ingress.yaml
