@@ -31,7 +31,7 @@ jobs:
 
     - name: Create backend configuration
       run: |
-        cat << EOF > infra/terraform/backend.tf
+        cat << EOF > backend.tf
         terraform {
           backend "s3" {
             bucket         = "${{ secrets.TF_VAR_backend_bucket }}"
