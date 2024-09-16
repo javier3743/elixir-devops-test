@@ -1,6 +1,6 @@
 module "alb" {
   source  = "terraform-aws-modules/alb/aws"
-  version = "~> 9.11.0"
+  version = "~> 8.5.0"
 
   name = "${var.cluster_name}-alb"
 
@@ -18,16 +18,11 @@ module "alb" {
       target_type      = "ip"
     }
   ]
-
-  listeners = [
+  http_tcp_listeners = [
     {
-      port     = 80
-      protocol = "HTTP"
-      default_action = {
-        type               = "forward"
-        target_group_index = 0
-      }
+      port               = 80
+      protocol           = "HTTP"
+      target_group_index = 0
     }
   ]
-
 }
