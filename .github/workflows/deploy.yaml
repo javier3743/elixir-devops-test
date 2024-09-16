@@ -2,9 +2,9 @@ name: 'Deploy branch main'
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - main
+  #push:
+  #  branches:
+  #    - main
 
 jobs:
   apply:
@@ -59,7 +59,7 @@ jobs:
     
     - name: Update kubeconfig
       run: |
-        aws eks get-token --cluster-name ${{ secrets.EKS_CLUSTER_NAME }} --region ${{ secrets.AWS_REGION }} | kubectl apply -f -
+        aws eks get-token --cluster-name ${{ secrets.EKS_CLUSTER_NAME }} | aws eks update-kubeconfig --name ${{ secrets.EKS_CLUSTER_NAME }} --region ${{ secrets.AWS_REGION }}
       
     - name: Create ConfigMap
       run: |
@@ -81,6 +81,6 @@ jobs:
     
     - name: Deploy Kubernetes manifests
       run: |
-        kubectl apply -f ../keila/ops/kubernetes/deployment.yaml
-        kubectl apply -f ../keila/ops/kubernetes/service.yaml
-        kubectl apply -f ../keila/ops/kubernetes/ingress.yaml
+        kubectl apply -f ../../keila/ops/kubernetes/deployment.yaml
+        kubectl apply -f ../../keila/ops/kubernetes/service.yaml
+        kubectl apply -f ../../keila/ops/kubernetes/ingress.yaml

@@ -11,6 +11,10 @@ module "eks_cluster_role" {
   ]
 
   custom_role_policy_arns = var.cluster_roles_policies
+
+  tags = {
+    Name = "${var.cluster_name}-eks-cluster-role"
+  }
 }
 
 module "eks_node_role" {
@@ -26,4 +30,8 @@ module "eks_node_role" {
   ]
 
   custom_role_policy_arns = var.nodes_roles_policies
+
+  tags = {
+    Name = "${var.cluster_name}-eks-node-role"
+  }
 }

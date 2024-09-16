@@ -24,7 +24,7 @@ module "eks" {
       max_size     = 3
       desired_size = 2
 
-      instance_types = ["t3.micro"]
+      instance_types = ["t2.micro"]
     }
   }
 
@@ -40,5 +40,8 @@ module "eks" {
   }
 
   node_security_group_id = var.eks_node_sg_id
-  
+
+  tags = {
+    Name = "${var.cluster_name}-eks"
+  }
 }

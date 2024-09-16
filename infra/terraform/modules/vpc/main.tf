@@ -2,7 +2,7 @@ module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
   version = "5.0.0"
 
-  name = "main-vpc"
+  name = "${var.cluster_name}-vpc"
   cidr = var.vpc_cidr
 
   azs             = var.availability_zones
@@ -20,15 +20,15 @@ module "vpc" {
   create_database_subnet_group = true
 
   tags = {
-    Name = "main-vpc"
+    Name = "${var.cluster_name}-vpc"
   }
   public_subnet_tags = {
-    Name                                        = "Public Subnets"
+    Name                                        = "${var.cluster_name}-public-subnets"
     "kubernetes.io/role/elb"                    = 1
     "kubernetes.io/cluster/${var.cluster_name}" = "shared"
   }
   private_subnet_tags = {
-    Name                                        = "private-subnets"
+    Name                                        = "${var.cluster_name}-private-subnets"
     "kubernetes.io/role/internal-elb"           = 1
     "kubernetes.io/cluster/${var.cluster_name}" = "shared"
   }
@@ -38,7 +38,7 @@ module "rds_security_group" {
   source  = "terraform-aws-modules/security-group/aws"
   version = "~> 5.2.0"
 
-  name        = "keila-rds"
+  name        = "${var.cluster_name}-keila-rds"
   description = "Allow database traffic"
   vpc_id      = module.vpc.vpc_id
 
@@ -51,13 +51,19 @@ module "rds_security_group" {
       cidr_blocks = module.vpc.vpc_cidr_block
     },
   ]
+  
+  tags = {
+    Name = "${var.cluster_name}-keila-rds"
+  }
+  
+  depends_on = [ module.vpc ]
 }
 
 module "eks_node_sg" {
   source  = "terraform-aws-modules/security-group/aws"
   version = "~> 5.2.0"
 
-  name        = "${var.cluster_name}-node-sg"
+  name        = "${var.cluster_name}-eks-node-sg"
   description = "Security group for EKS nodes"
   vpc_id      = module.vpc.vpc_id
 
@@ -77,6 +83,11 @@ module "eks_node_sg" {
       cidr_blocks = "0.0.0.0/0"
     }
   ]
+
+  tags = {
+    Name = "${var.cluster_name}-eks-node-sg"
+  }
+  depends_on = [ module.vpc ]
 }
 
 module "alb_sg" {
@@ -90,4 +101,10 @@ module "alb_sg" {
   ingress_cidr_blocks = ["0.0.0.0/0"]
   ingress_rules       = ["http-80-tcp"]
   egress_rules        = ["all-all"]
+
+  tags = {
+    Name = "${var.cluster_name}-alb-sg"
+  }
+
+  depends_on = [ module.vpc ]
 }

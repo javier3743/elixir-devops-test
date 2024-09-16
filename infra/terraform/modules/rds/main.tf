@@ -2,7 +2,7 @@ module "db" {
   source  = "terraform-aws-modules/rds/aws"
   version = "~> 6.9.0"
 
-  identifier = "keila"
+  identifier = "${var.cluster_name}-keila-db"
 
   engine               = "postgres"
   engine_version       = "15"
@@ -18,11 +18,19 @@ module "db" {
   password = var.db_password
   port     = 5432
 
-  multi_az               = false
+  enabled_cloudwatch_logs_exports = ["postgresql", "upgrade"]
+  create_cloudwatch_log_group     = true
+
+
+  maintenance_window      = "Mon:00:00-Mon:03:00"
+  backup_window           = "03:00-06:00"
+  backup_retention_period = 0
+
+  multi_az               = true
   db_subnet_group_name   = var.db_subnet_group_name
   vpc_security_group_ids = var.vpc_security_group_ids
 
   tags = {
-    Name = "keila-db"
+    Name = "${var.cluster_name}-keila-db"
   }
 }

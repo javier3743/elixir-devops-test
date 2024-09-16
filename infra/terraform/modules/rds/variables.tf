@@ -32,3 +32,8 @@ variable "vpc_security_group_ids" {
   description = "VPC security group IDs"
   type        = list(string)
 }
+
+variable "cluster_name" {
+  description = "Cluster name"
+  type        = string
+}

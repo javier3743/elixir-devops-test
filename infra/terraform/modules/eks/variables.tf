@@ -6,6 +6,10 @@ variable "cluster_version" {
   description = "EKS cluster version"
   type = string
 }
+variable "instance_types" {
+  description = "Instance types"
+  type = list(string)
+}
 variable "vpc_id" {
   description = "VPC ID"
   type = string

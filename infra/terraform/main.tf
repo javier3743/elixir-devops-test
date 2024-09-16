@@ -5,8 +5,9 @@ provider "aws" {
 module "iam" {
   source = "./modules/iam"
 
+  cluster_name = var.cluster_name
   cluster_roles_policies = var.cluster_roles_policies
-  nodes_roles_policies   = var.nodes_roles_policies
+  nodes_roles_policies   = var.nodes_roles_policies  
 }
 
 module "vpc" {
@@ -25,6 +26,7 @@ module "rds" {
   source = "./modules/rds"
 
   vpc_id            = module.vpc.vpc_id
+  cluster_name = var.cluster_name
   db_name           = var.db_name
   db_username       = var.db_username
   db_password       = var.db_password
@@ -41,6 +43,7 @@ module "eks" {
   cluster_version    = var.cluster_version
   vpc_id             = module.vpc.vpc_id
   subnet_ids         = module.vpc.private_subnet_ids
+  instance_types     = var.instance_types
   cluster_role_arn   = module.iam.cluster_role_arn
   nodes_role_arn     = module.iam.nodes_role_arn
   eks_node_sg_id     = module.vpc.eks_node_sg_id

@@ -38,6 +38,11 @@ variable "cluster_version" {
   type = string
 }
 
+variable "instance_types" {
+  description = "Instance types"
+  type = list(string)
+}
+
 variable "cluster_roles_policies" {
   description = "Cluster roles"
   type = list(string)

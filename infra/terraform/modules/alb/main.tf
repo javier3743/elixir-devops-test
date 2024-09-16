@@ -25,4 +25,8 @@ module "alb" {
       target_group_index = 0
     }
   ]
+
+  tags = {
+    Name = "${var.cluster_name}-alb"
+  }
 }
