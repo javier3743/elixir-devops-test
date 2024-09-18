@@ -81,6 +81,13 @@ module "eks_node_sg" {
       protocol    = "tcp"
       description = "Allow HTTPS ingress"
       cidr_blocks = "0.0.0.0/0"
+    },
+    {
+      from_port   = 5432
+      to_port     = 5432
+      protocol    = "tcp"
+      description = "Allow Postgres ingress"
+      cidr_blocks = "0.0.0.0/0"
     }
   ]
 
