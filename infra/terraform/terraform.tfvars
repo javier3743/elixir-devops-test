@@ -28,6 +28,6 @@ db_instance_class = "db.t3.micro"
 backend_bucket = "elixir-devops-test-terraform-state"
 backend_key_table = "elixir-devops-test-terraform-state"
 
-db_username = "kelia"
-db_password = "kelia"
+db_username = "kelia1"
+db_password = "kelia1"
 db_name = "kelia"

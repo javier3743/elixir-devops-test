@@ -26,7 +26,7 @@ module "rds" {
   source = "./modules/rds"
 
   vpc_id            = module.vpc.vpc_id
-  cluster_name = var.cluster_name
+  cluster_name      = var.cluster_name
   db_name           = var.db_name
   db_username       = var.db_username
   db_password       = var.db_password

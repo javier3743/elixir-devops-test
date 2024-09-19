@@ -2,9 +2,9 @@ name: 'Deploy branch main'
 
 on:
   workflow_dispatch:
-  #push:
-  #  branches:
-  #    - main
+  push:
+    branches:
+      - main
 
 jobs:
   apply:
@@ -59,7 +59,7 @@ jobs:
     
     - name: Update kubeconfig
       run: |
-        aws eks get-token --cluster-name ${{ secrets.EKS_CLUSTER_NAME }} | aws eks update-kubeconfig --name ${{ secrets.EKS_CLUSTER_NAME }} --region ${{ secrets.AWS_REGION }}
+        aws eks get-token --cluster-name ${{ secrets.EKS_CLUSTER_NAME }} | aws eks update-kubeconfig --name ${{ secrets.EKS_CLUSTER_NAME }} --region ${{ secrets.TF_VAR_REGION }}
       
     - name: Create ConfigMap
       run: |
