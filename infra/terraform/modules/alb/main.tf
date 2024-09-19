@@ -34,11 +34,6 @@ module "alb" {
       port               = 80
       protocol           = "HTTP"
       target_group_index = 0
-    },
-    {
-      port               = 4000
-      protocol           = "HTTP"
-      target_group_index = 1
     }
   ]
 
