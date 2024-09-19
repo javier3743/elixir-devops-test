@@ -14,8 +14,19 @@ module "alb" {
     {
       name_prefix      = "eks-"
       backend_protocol = "HTTP"
-      backend_port     = 80
+      backend_port     = 4000
       target_type      = "ip"
+      health_check = {
+        enabled             = true
+        interval            = 30
+        path                = "/healthz"
+        port                = "traffic-port"
+        healthy_threshold   = 3
+        unhealthy_threshold = 3
+        timeout             = 6
+        protocol            = "HTTP"
+        matcher             = "200-399"
+      }
     }
   ]
   http_tcp_listeners = [
@@ -23,6 +34,11 @@ module "alb" {
       port               = 80
       protocol           = "HTTP"
       target_group_index = 0
+    },
+    {
+      port               = 4000
+      protocol           = "HTTP"
+      target_group_index = 1
     }
   ]
 

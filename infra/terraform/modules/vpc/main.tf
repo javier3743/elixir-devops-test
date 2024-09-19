@@ -90,6 +90,15 @@ module "eks_node_sg" {
       cidr_blocks = "0.0.0.0/0"
     }
   ]
+  ingress_with_source_security_group_id = [
+    {
+      from_port   = 4000
+      to_port     = 4000
+      protocol    = "tcp"
+      description = "Allow Keila ingress"
+      source_security_group_id = module.alb_sg.security_group_id
+    }
+  ] 
 
   tags = {
     Name = "${var.cluster_name}-eks-node-sg"

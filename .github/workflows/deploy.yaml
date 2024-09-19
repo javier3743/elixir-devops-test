@@ -74,7 +74,7 @@ jobs:
       run: |
         kubectl create secret generic keila-secrets \
           --from-literal=SECRET_KEY_BASE=${{ secrets.SECRET_KEY_BASE }} \
-          --from-literal=DB_URL=${{ secrets.DB_URL }} \
+          --from-literal=DB_URL=postgres://kelia1:Half-Blood20@kelia-cluster-keila-db.clii2gaoygsn.us-west-2.rds.amazonaws.com:5432/kelia \
           --from-literal=MAILER_SMTP_USER=${{ secrets.MAILER_SMTP_USER }} \
           --from-literal=MAILER_SMTP_PASSWORD=${{ secrets.MAILER_SMTP_PASSWORD }} \
           --dry-run=client -o yaml | kubectl apply -f -
