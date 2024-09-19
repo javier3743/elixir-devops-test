@@ -26,6 +26,8 @@ module "db" {
   backup_window           = "03:00-06:00"
   backup_retention_period = 0
 
+  storage_encrypted = false
+
   multi_az               = true
   db_subnet_group_name   = var.db_subnet_group_name
   vpc_security_group_ids = var.vpc_security_group_ids
