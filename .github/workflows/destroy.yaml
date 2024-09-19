@@ -28,6 +28,20 @@ jobs:
     - name: Set up Terraform
       uses: hashicorp/setup-terraform@v3
 
+    - name: Create backend configuration
+      run: |
+        cat << EOF > backend.tf
+        terraform {
+          backend "s3" {
+            bucket         = "${{ secrets.TF_VAR_backend_bucket }}"
+            key            = "terraform.tfstate"
+            region         = "${{ secrets.TF_VAR_region }}"
+            dynamodb_table = "${{ secrets.TF_VAR_backend_key_table }}"
+            encrypt        = true
+          }
+        }
+        EOF
+
     - name: Terraform Init
       run: terraform init
       env:
